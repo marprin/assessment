@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ $1 = "server" ]; then
+    env $(cat .env | xargs) flask run --reload
+fi

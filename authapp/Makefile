@@ -1,0 +1,2 @@
+runserver:
+	./run server
