@@ -1,0 +1,7 @@
+black==21.9b0
+flake8==4.0.1
+flake8-bugbear==21.9.2
+Flask==2.0.2
+PyJWT==2.3.0
+pylint==2.11.1
+python-json-logger==2.0.2
