@@ -1,14 +1,23 @@
 import logging
+from datetime import datetime
 from random import choice
 
+import settings
 from app.constant import ErrGeneratePassword
-from app.repository.user_repo import create_user, is_password_unique, is_username_unique
-from utils.error import DuplicateValueError
+from app.repository.jwt_repo import generate_token
+from app.repository.user_repo import (
+    create_user,
+    find_user_by_phone_and_pwd,
+    is_password_unique,
+    is_username_unique,
+)
+from marshmallow.fields import DateTime
+from utils.error import DuplicateValueError, NotFound
 
 logger = logging.getLogger("app.service.user_service")
 
 
-def register(payload):
+def register(payload: dict):
     # Check the username
     is_username_taken = is_username_unique(payload["username"])
     if is_username_taken:
@@ -47,3 +56,21 @@ def register(payload):
 def generate_password(length: int) -> str:
     options = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return "".join(choice(options) for i in range(length))
+
+
+def login(phone: str, pwd: str) -> str:
+    user = find_user_by_phone_and_pwd(phone=phone, pwd=pwd)
+    if not user:
+        raise NotFound
+
+    # When found, generate the token
+    payload = {
+        "name": user.name,
+        "phone": user.phone,
+        "role": user.role,
+        "timestamp": datetime.utcnow().timestamp(),
+    }
+
+    return generate_token(
+        payload=payload, expire_in=settings.JWT_EXPIRE_IN, secret=settings.JWT_SECRET
+    )

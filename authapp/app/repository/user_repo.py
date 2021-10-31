@@ -24,3 +24,8 @@ def create_user(username: str, name: str, phone: str, pwd: str, role: str):
         role=role,
         created_at=datetime.utcnow(),
     )
+
+
+@db_session
+def find_user_by_phone_and_pwd(phone: str, pwd: str) -> User:
+    return User.get(phone=phone, password=pwd)
