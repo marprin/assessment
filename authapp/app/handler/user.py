@@ -18,7 +18,7 @@ def create_user_handler():
         return jsonify({"errors": e.messages}), 422
 
     try:
-        register(
+        generated_pwd = register(
             {
                 "name": payload["name"],
                 "phone": payload["phone"],
@@ -26,7 +26,7 @@ def create_user_handler():
                 "username": payload["username"],
             }
         )
-        return jsonify({"message": SuccessCreateUser}), 201
+        return jsonify({"password": generated_pwd}), 201
     except DuplicateValueError as e:
         return jsonify({"errors": {"message": "Username is taken"}}), 400
     except Exception as e:

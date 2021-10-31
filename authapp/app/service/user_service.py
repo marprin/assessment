@@ -50,7 +50,7 @@ def register(payload: dict):
         pwd=generated_pwd,
     )
 
-    return None
+    return generated_pwd
 
 
 def generate_password(length: int) -> str:
