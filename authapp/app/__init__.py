@@ -15,6 +15,3 @@ def create_app():
     register_router(app)
 
     return app
-
-
-app = create_app()
