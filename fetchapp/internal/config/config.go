@@ -9,8 +9,10 @@ import (
 
 type (
 	Config struct {
-		App   AppConfig   `yaml:"app"`
-		Token TokenConfig `yaml:"token"`
+		App      AppConfig      `yaml:"app"`
+		Token    TokenConfig    `yaml:"token"`
+		Gateway  GatewayConfig  `yaml:"gateway"`
+		Currency CurrencyConfig `yaml:"currency"`
 	}
 
 	AppConfig struct {
@@ -25,6 +27,15 @@ type (
 	TokenConfig struct {
 		Secret string `yaml:"secret"`
 		Issuer string `yaml:"issuer"`
+	}
+
+	GatewayConfig struct {
+		URL string `yaml:"url"`
+	}
+
+	CurrencyConfig struct {
+		URL    string `yaml:"url"`
+		APIKey string `yaml:"api_key"`
 	}
 )
 

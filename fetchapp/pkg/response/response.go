@@ -27,13 +27,11 @@ func Response(w http.ResponseWriter, r *http.Request, httpStatusHeader int, data
 	if code >= http.StatusOK && code <= 299 {
 		logrus.WithFields(logrus.Fields{
 			"request_uri": r.URL.Path,
-			"response":    apiResponse,
 			"status_code": httpStatusHeader,
 		}).Infoln("API Response Success")
 	} else {
 		logrus.WithFields(logrus.Fields{
 			"request_uri": r.URL.Path,
-			"response":    apiResponse,
 			"status_code": httpStatusHeader,
 		}).Errorln("API Response Error")
 	}

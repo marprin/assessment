@@ -9,3 +9,10 @@ app:
 token:
   secret: someF4k353cR3T!
   issuer: authapp-http
+
+gateway:
+  url: https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4/list
+
+currency:
+  url: https://free.currconv.com/api/v7/convert
+  api_key: 

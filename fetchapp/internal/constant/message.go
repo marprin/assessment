@@ -7,4 +7,5 @@ var (
 	ErrClaimsIsNotValid = errors.New("Claim is not valid")
 	ErrIssuerIsNotValid = errors.New("Issuer is not valid")
 	ErrTokenIsExpired   = errors.New("Token is expired")
+	ErrInternalServer   = errors.New("Internal server error")
 )
