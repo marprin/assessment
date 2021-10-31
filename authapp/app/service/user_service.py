@@ -4,7 +4,7 @@ from random import choice
 
 import settings
 from app.constant import ErrGeneratePassword
-from app.repository.jwt_repo import generate_token
+from app.repository.jwt_repo import generate_token, parse_token
 from app.repository.user_repo import (
     create_user,
     find_user_by_phone_and_pwd,
@@ -68,9 +68,13 @@ def login(phone: str, pwd: str) -> str:
         "name": user.name,
         "phone": user.phone,
         "role": user.role,
-        "timestamp": datetime.utcnow().timestamp(),
+        "timestamp": int(datetime.utcnow().timestamp()),
     }
 
     return generate_token(
         payload=payload, expire_in=settings.JWT_EXPIRE_IN, secret=settings.JWT_SECRET
     )
+
+
+def extract_token_info(token: str) -> dict:
+    return parse_token(token=token, secret=settings.JWT_SECRET)
