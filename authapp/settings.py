@@ -5,6 +5,8 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_EXPIRE_IN = os.getenv("JWT_EXPIRE_IN", 3600)
 
+DB_PATH = os.path.join(BASE_DIR, "data/db.sqlite")
+
 LOGGING_CONFIG = {
     "version": 1,
     "disable_existing_loggers": False,
