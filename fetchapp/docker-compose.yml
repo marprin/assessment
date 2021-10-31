@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: fetchapp:latest
+    ports: 
+      - 7788:7788
+    command: serve
+    working_dir: /app/src/handler
+    volumes:
+      - "./config:/app/src/handler/config"
+      - "./data:/app/src/handler/data"
