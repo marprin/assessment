@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 
 	"github.com/marprin/assessment/fetchapp/internal/domain/storage"
@@ -109,4 +110,78 @@ func (s *service) StorageList(ctx context.Context) ([]entity.StorageListResponse
 	}
 
 	return resp, nil
+}
+
+func (s *service) FilterStorageList(ctx context.Context, payload entity.FilterStorageRequest) (*entity.FilterStorageResponse, error) {
+
+	gatewayResp, err := s.gatewayRepo.FetchStorageList(ctx)
+	if err != nil {
+		logrus.WithFields(logrus.Fields{
+			"err": err,
+		}).Errorln("[StorageList, FilterStorageList] Error when fetch storage list")
+		return nil, err
+	}
+
+	var (
+		minPrice, maxPrice, sumPrice float64 = math.MaxFloat64, -1, 0
+		totalItem                    int
+	)
+	for _, v := range gatewayResp {
+		if v.UUID == nil || v.Price == nil {
+			continue
+		}
+
+		if payload.AreaProvinsi != "" && *v.AreaProvinsi != payload.AreaProvinsi {
+			continue
+		}
+
+		if v.Timestamp != nil {
+			parsedTime, err := strconv.Atoi(*v.Timestamp)
+			if err != nil {
+				continue
+			}
+
+			if payload.StartDate != "" && parsedTime < payload.StartDateTime {
+				continue
+			}
+
+			if payload.EndDate != "" && parsedTime > payload.EndDateTime {
+				continue
+			}
+		}
+
+		priceFloat, err := strconv.ParseFloat(*v.Price, 64)
+		if err != nil {
+			continue
+		}
+
+		if priceFloat > maxPrice {
+			maxPrice = priceFloat
+		}
+		if priceFloat < minPrice {
+			minPrice = priceFloat
+		}
+
+		sumPrice += priceFloat
+
+		totalItem++
+	}
+
+	median := float64(0)
+	avg := float64(0)
+	if sumPrice != 0 {
+		median = sumPrice / 2
+
+		if totalItem > 0 {
+			avg = sumPrice / float64(totalItem)
+		}
+	}
+
+	return &entity.FilterStorageResponse{
+		Min:    minPrice,
+		Max:    maxPrice,
+		Median: median,
+		Avg:    avg,
+	}, nil
+
 }

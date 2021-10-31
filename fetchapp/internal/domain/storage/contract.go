@@ -13,6 +13,7 @@ type (
 
 	Service interface {
 		StorageList(ctx context.Context) ([]entity.StorageListResponse, error)
+		FilterStorageList(ctx context.Context, payload entity.FilterStorageRequest) (*entity.FilterStorageResponse, error)
 	}
 
 	Gateway interface {

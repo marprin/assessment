@@ -1,6 +1,10 @@
 package entity
 
-import "time"
+import (
+	"time"
+
+	"github.com/marprin/assessment/fetchapp/internal/constant"
+)
 
 type (
 	StorageListResponse struct {
@@ -14,4 +18,38 @@ type (
 		Timestamp    *string    `json:"timestamp"`
 		USDPrice     *float64   `json:"usd_price"`
 	}
+
+	FilterStorageRequest struct {
+		AreaProvinsi  string
+		StartDate     string
+		EndDate       string
+		StartDateTime int
+		EndDateTime   int
+	}
+	FilterStorageResponse struct {
+		Min    float64 `json:"min"`
+		Max    float64 `json:"max"`
+		Median float64 `json:"median"`
+		Avg    float64 `json:"avg"`
+	}
 )
+
+func (f *FilterStorageRequest) Validate() error {
+	if f.StartDate != "" {
+		parseStartTime, err := time.Parse("2006-01-02T15:04:05", f.StartDate)
+		if err != nil {
+			return constant.ErrStartDateNotValid
+		}
+		f.StartDateTime = int(parseStartTime.Unix())
+	}
+
+	if f.EndDate != "" {
+		parseEndTime, err := time.Parse("2006-01-02T15:04:05", f.EndDate)
+		if err != nil {
+			return constant.ErrEndDateNotValid
+		}
+		f.EndDateTime = int(parseEndTime.Unix())
+	}
+
+	return nil
+}

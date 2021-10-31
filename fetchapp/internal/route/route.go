@@ -11,5 +11,6 @@ func (s *Server) Routes() {
 
 	s.router.Route("/storage", func(r chi.Router) {
 		r.With(s.middleware.AuthorizeAdminOnly).Get("/list", s.handler.FetchStorage)
+		r.With(s.middleware.AuthorizeAdminOnly).Get("/filter", s.handler.FilterStorage)
 	})
 }
